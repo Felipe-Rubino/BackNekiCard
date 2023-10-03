@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -92,13 +93,28 @@ public class ColaboradorService {
 	}
 	
 	@Transactional
-	public ColaboradorDTO addSkill( String email, String nome, String nomeSocial, Date dataDeNascimento, MultipartFile file, String telefone, String instagram, String gitHub, String linkedin, String facebook)  throws IOException {
+	public ColaboradorDTO addColaborador( String email, String nome, String nomeSocial, Date dataDeNascimento, MultipartFile file, String telefone, String instagram, String gitHub, String linkedin, String facebook)  throws IOException {
 		Colaborador colaborador = mapToEntity(email, nome, nomeSocial, dataDeNascimento, file, telefone, instagram, gitHub, linkedin, facebook);
-		Colaborador colaboradorSalvo = userRepository.save(colaborador);
+		
 		if(colaborador.getNomeSocial().length() > 20) {
 			throw new NotFoundException("Nome social deve ter menos que 20 letras");
 		}
+		if (colaboradorRepository.existsByEmail(colaborador.getEmail())) {
+		    throw new NotFoundException("O endereço de e-mail já existe!");
+		}
+		
+		Colaborador colaboradorSalvo = userRepository.save(colaborador);
 		ColaboradorDTO returnColaboradorDTO = mapToResponseDTO(colaboradorSalvo);
 		return returnColaboradorDTO;
+	}
+	
+	public void excluirColaborador(Long colaboradorId) {
+		Optional<Colaborador> colaboradorOptional = colaboradorRepository.findById(colaboradorId);
+	    if (!colaboradorOptional.isPresent()) {
+	        throw new NotFoundException("Não há colaborador com este ID: " + colaboradorId);
+	    }
+		colaboradorRepository.deleteById(colaboradorId);
+	
+
 	}
 }	

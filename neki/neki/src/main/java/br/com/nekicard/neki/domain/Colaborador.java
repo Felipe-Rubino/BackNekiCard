@@ -16,6 +16,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Past;
 
 @Entity
 @Table(name="colaborador")
@@ -28,22 +29,23 @@ public class Colaborador {
 	@Column(name="colaborador_cd_id")
 	private Long colaboradorId;
 	
-	@Column(name="col_tx_email", unique=true )
-	@NotBlank
+	@Column(name="col_tx_email", unique = true)
+	@NotBlank(message = "O email é obrigatório")
 	private String email;
 	
 	@Column(name="col_tx_nome")
-	@NotBlank
+	@NotBlank(message = "O nome é obrigatório")
 	private String nome;
 	
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="usuario_cd_id")
 	private Usuario usuario;
 	
-	@Column(name="col_tx_nomeSocial")
+	@Column(name="col_tx_nomeSocial")	
 	private String nomeSocial;
 	
 	@Column(name="col_dt_nascimento")
+	@Past(message = "A data de nascimento deve estar no passado")
 	private Date dataDeNascimento;
 	
 	@OneToOne(cascade=CascadeType.PERSIST)

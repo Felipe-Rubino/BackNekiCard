@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import br.com.nekicard.neki.security.domain.User;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,7 +30,7 @@ public class Usuario {
 	@Column(name="usu_tx_nome")
 	private String nome;
 	
-	@OneToOne(mappedBy = "usuario")
+	@OneToOne(mappedBy = "usuario", cascade=CascadeType.ALL)
 	private Colaborador colaborador;
 	
 	public Usuario() {

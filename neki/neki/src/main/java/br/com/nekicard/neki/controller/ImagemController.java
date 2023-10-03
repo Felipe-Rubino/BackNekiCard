@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import br.com.nekicard.neki.domain.Imagem;
 import br.com.nekicard.neki.dto.ImagemDTO;
 import br.com.nekicard.neki.service.ImagemService;
+import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequestMapping("/imagem")
@@ -26,16 +27,19 @@ public class ImagemController {
 	ImagemService imagemService;
 	
 	@GetMapping("/lista")
+	@Operation(summary = "Lista todas as imagens", description = "Listagem de imagens")
 	public List<ImagemDTO> findAll(){
 		return imagemService.listarTudo();
 	}
 	
 	@GetMapping("/{id}")
+	@Operation(summary = "Lista as imagem por ID", description = "Listagem de imagens")
 	public ImagemDTO findById(@PathVariable("id") Long id) {
 		return imagemService.buscarImagemId(id);
 	}
 	
 	@PostMapping(path = "/inserir", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE})
+	@Operation(summary = "Upload de Imagem", description = "Upload imagem")
 	public Imagem uploadImagem(@RequestPart("imagem") MultipartFile file) {
 		String tipoImagem = file.getContentType();
 		byte[]dados = null;
@@ -51,6 +55,7 @@ public class ImagemController {
 	}
 	
 	@DeleteMapping("/{id}")
+	@Operation(summary = "Deletar imagens", description = "Exclusão")
 	public void deletarImagem(@PathVariable("id") Long id) {
 		imagemService.excluirImagem(id);
 	}
