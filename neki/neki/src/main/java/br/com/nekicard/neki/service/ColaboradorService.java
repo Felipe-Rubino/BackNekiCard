@@ -15,6 +15,7 @@ import br.com.nekicard.neki.domain.Imagem;
 import br.com.nekicard.neki.dto.ColaboradorDTO;
 import br.com.nekicard.neki.exception.NotFoundException;
 import br.com.nekicard.neki.repository.ColaboradorRepository;
+import br.com.nekicard.neki.security.repository.UserRepository;
 
 
 @Service
@@ -22,6 +23,11 @@ public class ColaboradorService {
 	
 	@Autowired
 	ColaboradorRepository colaboradorRepository;
+	
+
+	@Autowired
+	UserRepository userRepository;
+		
 		
 	
 	@Transactional
@@ -88,7 +94,7 @@ public class ColaboradorService {
 	@Transactional
 	public ColaboradorDTO addSkill( String email, String nome, String nomeSocial, Date dataDeNascimento, MultipartFile file, String telefone, String instagram, String gitHub, String linkedin, String facebook)  throws IOException {
 		Colaborador colaborador = mapToEntity(email, nome, nomeSocial, dataDeNascimento, file, telefone, instagram, gitHub, linkedin, facebook);
-		Colaborador colaboradorSalvo = colaboradorRepository.save(colaborador);
+		Colaborador colaboradorSalvo = userRepository.save(colaborador);
 		if(colaborador.getNomeSocial().length() > 20) {
 			throw new NotFoundException("Nome social deve ter menos que 20 letras");
 		}

@@ -36,6 +36,10 @@ public class Colaborador {
 	@NotBlank
 	private String nome;
 	
+	@OneToOne
+	@JoinColumn(name="usuario_cd_id")
+	private Usuario usuario;
+	
 	@Column(name="col_tx_nomeSocial")
 	private String nomeSocial;
 	
@@ -66,7 +70,7 @@ public class Colaborador {
 	}
 
 	public Colaborador(Long colaboradorId, String email, String nome, String nomeSocial, Date dataDeNascimento,
-			Imagem imagem, String telefone, String instagram, String gitHub, String linkedin, String facebook) {
+			Imagem imagem, String telefone, String instagram, String gitHub, String linkedin, String facebook,Usuario usuario) {
 		
 		this.colaboradorId = colaboradorId;
 		this.email = email;
@@ -79,6 +83,17 @@ public class Colaborador {
 		this.gitHub = gitHub;
 		this.linkedin = linkedin;
 		this.facebook = facebook;
+		this.usuario = usuario;
+	}
+
+	
+	
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 
 	public Long getColaboradorId() {
