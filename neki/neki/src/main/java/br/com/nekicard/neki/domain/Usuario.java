@@ -29,14 +29,18 @@ public class Usuario {
 	@Column(name="usu_tx_nome")
 	private String nome;
 	
+	@OneToOne(mappedBy = "usuario")
+	private Colaborador colaborador;
+	
 	public Usuario() {
 		
 	}
 
-	public Usuario(Long usuarioId, User usuario, String nome) {
+	public Usuario(Long usuarioId, User usuario, String nome, Colaborador colaborador) {
 		this.usuarioId = usuarioId;
 		this.usuario = usuario;
 		this.nome = nome;
+		this.colaborador = colaborador;
 	}
 
 	public Long getUsuarioId() {
@@ -61,6 +65,14 @@ public class Usuario {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public Colaborador getColaborador() {
+		return colaborador;
+	}
+
+	public void setColaborador(Colaborador colaborador) {
+		this.colaborador = colaborador;
 	}
 	
 	
