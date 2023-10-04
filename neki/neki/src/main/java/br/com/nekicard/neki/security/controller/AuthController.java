@@ -24,12 +24,15 @@ import br.com.nekicard.neki.domain.Imagem;
 import br.com.nekicard.neki.domain.Usuario;
 import br.com.nekicard.neki.dto.ColaboradorRegisterDTO;
 import br.com.nekicard.neki.dto.ColaboradorReturnDTO;
+import br.com.nekicard.neki.exception.NotFoundException;
 import br.com.nekicard.neki.repository.ColaboradorRepository;
 import br.com.nekicard.neki.repository.UsuarioRepository;
 import br.com.nekicard.neki.security.domain.Role;
 import br.com.nekicard.neki.security.domain.User;
 import br.com.nekicard.neki.security.dto.JwtResponseDTO;
 import br.com.nekicard.neki.security.dto.LoginRequestDTO;
+import br.com.nekicard.neki.security.dto.MessageResponseDTO;
+import br.com.nekicard.neki.security.dto.SignupRequestDTO;
 import br.com.nekicard.neki.security.enums.RoleEnum;
 import br.com.nekicard.neki.security.jwt.JwtUtils;
 import br.com.nekicard.neki.security.repository.RoleRepository;
@@ -134,48 +137,44 @@ public class AuthController {
 	}
 	
 	@PostMapping("/signup")
-	public ColaboradorReturnDTO registerUser(@Valid @RequestBody ColaboradorRegisterDTO colaboradorDTO, MultipartFile file) throws Exception{
-	    if (userRepository.existsByEmail(colaboradorDTO.getEmail())) {
-	    	throw new Exception("Erro: Email já utilizado!");
+	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequestDTO signUpRequest) {
+	    if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+	        return ResponseEntity.badRequest().body(new MessageResponseDTO("Erro: Email já utilizado!"));
 	    }
-	    Colaborador colaborador = mapToEntity(colaboradorDTO, file);
-
-	    ColaboradorReturnDTO colaboradorReturnDTOs = new ColaboradorReturnDTO();
-	    
 	    Usuario usuario = new Usuario();
-	    usuario.setNome(colaboradorDTO.getSignupRequestDTO().getUsername());
+	    usuario.setNome(signUpRequest.getUsername());
+	    
 	    usuario = usuarioRepository.save(usuario);
-
+	    
+	    if (!signUpRequest.getEmail().matches(".+@(neki(-it)?\\.com\\.br)$") ) {
+            throw new NotFoundException("O endereço de e-mail precisa ser com @neki-it.");
+        }
 	
-	    User user = new User(colaboradorDTO.getEmail(),
-	            encoder.encode(colaboradorDTO.getSignupRequestDTO().getPassword()),
+	    User user = new User(signUpRequest.getEmail(),
+	            encoder.encode(signUpRequest.getPassword()),
 	            usuario
 	            );
 
-	    Set<String> strRoles = colaboradorDTO.getSignupRequestDTO().getRole();
+	    Set<String> strRoles = signUpRequest.getRole();
 	    Set<Role> roles = new HashSet<>();
 
-	    if (strRoles == null) {
-	        Role userRole = roleRepository.findByName(RoleEnum.ROLE_USER)
-	                .orElseThrow(() -> new RuntimeException("Erro: Role não encontrada."));
-	        roles.add(userRole);
-	    } else {
-	        Role userRole = roleRepository.findByName(RoleEnum.ROLE_USER)
-	                .orElseThrow(() -> new RuntimeException("Erro: Role não encontrada."));
-	        roles.add(userRole);
-	    }
+//	    if (strRoles == null) {
+//	        Role userRole = roleRepository.findByName(RoleEnum.ROLE_USER)
+//	                .orElseThrow(() -> new RuntimeException("Erro: Role não encontrada."));
+//	        roles.add(userRole);
+//	    } else {
+//	        Role userRole = roleRepository.findByName(RoleEnum.ROLE_USER)
+//	                .orElseThrow(() -> new RuntimeException("Erro: Role não encontrada."));
+//	        roles.add(userRole);
+//	    }
+	    
+	    Role colaboradorRole = roleRepository.findByName(RoleEnum.ROLE_ADM)
+				.orElseThrow(() -> new RuntimeException("Erro: Role não encontrada."));
+		roles.add(colaboradorRole);
 
 	    user.setRoles(roles);
 	    userRepository.save(user);
-	    colaborador.setUsuario(user.getUsuario());
-	    colaborador.setEmail(user.getEmail());
-	    Colaborador colaboradorSalvo = colaboradorRepository.save(colaborador);
-	    usuario.setUsuario(user);
-	    usuario = usuarioRepository.save(usuario);
-	    
-	    ColaboradorRegisterDTO returnColaboradorDTO = mapToResponseDTO(colaboradorSalvo);
-	    colaboradorReturnDTOs = mapToColaboradorReturnDTO(returnColaboradorDTO);
 
-	    return colaboradorReturnDTOs;
+	    return ResponseEntity.ok(new MessageResponseDTO("Usuário registrado com sucesso!"));
 	}
 }

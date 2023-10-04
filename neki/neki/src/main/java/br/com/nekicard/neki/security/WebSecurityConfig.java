@@ -23,9 +23,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-
-
-
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
@@ -45,9 +42,10 @@ public class WebSecurityConfig {
 				.sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-						.requestMatchers("/auth/signup", "/roles", "/colaborador/listar",  "/colaborador/inserir")
+						.requestMatchers("/auth/signin","/auth/signup", "/roles",  "/colaborador/inserir","/colaborador/listar")
 						.permitAll()
-						.requestMatchers("/colaborador/**", "/colaborador/inserir",  "/imagem/lista").hasRole("USER")
+						.requestMatchers("/colaborador/inserir","/imagem/lista").hasRole("USER")
+						.requestMatchers("/colaborador/{id}", "atualizar/{id}").hasRole("ADM")
 						.anyRequest().authenticated());
 
 		http.authenticationProvider(authenticationProvider());
@@ -61,7 +59,7 @@ public class WebSecurityConfig {
 		CorsConfiguration configuration = new CorsConfiguration();
 		configuration.setAllowedOrigins(List.of("*"));
 		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-		configuration.addAllowedOrigin("*"); // Adicionando o link permitido
+		configuration.addAllowedOrigin("*");
 		configuration.setAllowedHeaders(List.of("Authorization", "content-type" ));
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
