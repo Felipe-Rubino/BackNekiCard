@@ -146,7 +146,7 @@ public class AuthController {
 	    
 	    usuario = usuarioRepository.save(usuario);
 	    
-	    if (signUpRequest.getEmail().matches(".+@(neki(-it)?\\.com\\.br)$") ) {
+	    if (!signUpRequest.getEmail().matches(".+@(neki(-it)?\\.com\\.br)$") ) {
             throw new NotFoundException("O endereço de e-mail precisa ser com @neki-it.");
         }
 	

@@ -13,12 +13,15 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.com.nekicard.neki.dto.ColaboradorDTO;
+import br.com.nekicard.neki.dto.ColaboradorReturnRegisterDTO;
 import br.com.nekicard.neki.exception.NotFoundException;
 import br.com.nekicard.neki.service.ColaboradorService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,8 +40,6 @@ public class ColaboradorController {
 
 	@GetMapping("/listar")
 	@Operation(summary = "Lista todas os colaboradores", description = "Listagem de colaboradores")
-	@SecurityRequirement(name = "Bearer Auth")
-	@PreAuthorize("hasRole('ADM')")
 	public List<ColaboradorDTO> listar(){
 		return colaboradorService.listarTudo();
 	}
@@ -64,4 +65,13 @@ public class ColaboradorController {
 		colaboradorService.excluirColaborador(id);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
+	
+	@PutMapping("atualizar/{id}")
+	@Operation(summary = "Atualização de colaborador", description = "Exclusão")
+	@SecurityRequirement(name = "Bearer Auth")
+	@PreAuthorize("hasRole('ADM')")
+	public ResponseEntity<Object> atualizarColaborador(@RequestBody ColaboradorReturnRegisterDTO colaboradorDTO, @RequestParam Long colaboradorID) {
+		return ResponseEntity.ok(colaboradorService.atualizarColaborador(colaboradorDTO, colaboradorID));
+	}
+	
 }
