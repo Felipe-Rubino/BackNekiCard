@@ -2,7 +2,7 @@ package br.com.nekicard.neki.dto;
 
 import java.util.Date;
 
-import br.com.nekicard.neki.domain.Imagem;
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class ColaboradorReturnRegisterDTO {
 	
@@ -10,6 +10,8 @@ public class ColaboradorReturnRegisterDTO {
 	private String email;
 	private String nome;
 	private String nomeSocial;
+	
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private Date dataDeNascimento;
 	private String telefone;
 	private String instagram;
