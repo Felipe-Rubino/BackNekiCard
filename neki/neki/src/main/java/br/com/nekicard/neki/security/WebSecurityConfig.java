@@ -42,9 +42,9 @@ public class WebSecurityConfig {
 				.sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-						.requestMatchers("/auth/signin","/auth/signup", "/roles",  "/colaborador/inserir","/colaborador/listar")
+						.requestMatchers("/auth/signin","/auth/signup", "/roles",  "/colaborador/inserir","/colaborador/listar","/imagem/lista", "/colaborador/colaboradorId/{id}")
 						.permitAll()
-						.requestMatchers("/colaborador/inserir","/imagem/lista").hasRole("USER")
+						.requestMatchers("/colaborador/inserir").hasRole("USER")
 						.requestMatchers("/colaborador/{id}", "atualizar/{id}").hasRole("ADM")
 						.anyRequest().authenticated());
 

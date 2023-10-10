@@ -15,7 +15,6 @@ import br.com.nekicard.neki.domain.Colaborador;
 import br.com.nekicard.neki.domain.Imagem;
 import br.com.nekicard.neki.dto.ColaboradorDTO;
 import br.com.nekicard.neki.dto.ColaboradorRegisterDTO;
-import br.com.nekicard.neki.dto.ColaboradorReturnDTO;
 import br.com.nekicard.neki.dto.ColaboradorReturnRegisterDTO;
 import br.com.nekicard.neki.exception.NotFoundException;
 import br.com.nekicard.neki.repository.ColaboradorRepository;
@@ -47,7 +46,7 @@ public class ColaboradorService {
 			colaboradorReturnDTO.setColaboradorId(colaborador.getColaboradorId());
 			colaboradorReturnDTO.setDataDeNascimento(colaborador.getDataDeNascimento());
 			colaboradorReturnDTO.setEmail(colaborador.getEmail());
-			colaboradorReturnDTO.setFacebook(colaborador.getEmail());
+			colaboradorReturnDTO.setFacebook(colaborador.getFacebook());
 			colaboradorReturnDTO.setGitHub(colaborador.getGitHub());
 			colaboradorReturnDTO.setImagem(colaborador.getImagem());
 			colaboradorReturnDTO.setInstagram(colaborador.getInstagram());
@@ -181,6 +180,8 @@ public class ColaboradorService {
 		Colaborador colaboradorAntigo = colaboradorOptional.get();
 		ColaboradorReturnRegisterDTO colaboradorReturnDTOs = new ColaboradorReturnRegisterDTO();
 		
+		
+		
 		colaboradorAntigo.setDataDeNascimento(colaboradorDTO.getDataDeNascimento());
 		colaboradorAntigo.setEmail(colaboradorDTO.getEmail());
 		colaboradorAntigo.setFacebook(colaboradorDTO.getFacebook());
@@ -197,8 +198,24 @@ public class ColaboradorService {
 		colaboradorReturnDTOs = mapToColaboradorReturnDTO(returnColaboradorDTO);
 		
 		return colaboradorReturnDTOs;
+	}
+	
+	public ColaboradorDTO buscarColaborador(Long colaboradorId) {
+		Optional<Colaborador> colaboradorOptional = colaboradorRepository.findById(colaboradorId);
+		Colaborador colaborador = colaboradorOptional.get();
+		ColaboradorDTO colaboradorDTO = new ColaboradorDTO();
+		colaboradorDTO.setColaboradorId(colaborador.getColaboradorId());
+		colaboradorDTO.setEmail(colaborador.getEmail());
+		colaboradorDTO.setFacebook(colaborador.getFacebook());
+		colaboradorDTO.setGitHub(colaborador.getGitHub());
+		colaboradorDTO.setImagem(colaborador.getImagem());
+		colaboradorDTO.setInstagram(colaborador.getInstagram());
+		colaboradorDTO.setLinkedin(colaborador.getLinkedin());
+		colaboradorDTO.setNome(colaborador.getNome());
+		colaboradorDTO.setNomeSocial(colaborador.getNomeSocial());
+		colaboradorDTO.setTelefone(colaborador.getTelefone());
+		colaboradorDTO.setDataDeNascimento(colaborador.getDataDeNascimento());
 		
-		
-		
+		return colaboradorDTO;
 	}
 }	

@@ -158,15 +158,6 @@ public class AuthController {
 	    Set<String> strRoles = signUpRequest.getRole();
 	    Set<Role> roles = new HashSet<>();
 
-//	    if (strRoles == null) {
-//	        Role userRole = roleRepository.findByName(RoleEnum.ROLE_USER)
-//	                .orElseThrow(() -> new RuntimeException("Erro: Role não encontrada."));
-//	        roles.add(userRole);
-//	    } else {
-//	        Role userRole = roleRepository.findByName(RoleEnum.ROLE_USER)
-//	                .orElseThrow(() -> new RuntimeException("Erro: Role não encontrada."));
-//	        roles.add(userRole);
-//	    }
 	    
 	    Role colaboradorRole = roleRepository.findByName(RoleEnum.ROLE_ADM)
 				.orElseThrow(() -> new RuntimeException("Erro: Role não encontrada."));

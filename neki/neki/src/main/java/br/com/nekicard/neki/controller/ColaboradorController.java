@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -44,8 +43,7 @@ public class ColaboradorController {
 		return colaboradorService.listarTudo();
 	}
 	
-	@PostMapping(path = "/inserir", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE,
-			MediaType.APPLICATION_JSON_VALUE })
+	@PostMapping(path = "/inserir")
 	@Operation(summary = "Cadastro de colaborador", description = "Cadastro")
 	public ResponseEntity<Object> addColaborador(@Valid @RequestParam("imagem") MultipartFile file,String email, String nome, @Nullable  String nomeSocial, Date dataDeNascimento, @Nullable String telefone,  @Nullable String instagram,  @Nullable  String gitHub, @Nullable  String linkedin, @Nullable  String facebook) throws IOException {
 		 var colaboradorSalvo = colaboradorService.addColaborador(email, nome, nomeSocial, dataDeNascimento, file, telefone, instagram, gitHub, linkedin, facebook);
@@ -55,6 +53,12 @@ public class ColaboradorController {
 	        }
 		
 		 return ResponseEntity.ok(colaboradorSalvo);
+	}
+	
+	@GetMapping("colaboradorId/{id}")
+	@Operation(summary = "Achar colaborador por id", description = "Listar")
+	public ColaboradorDTO findById(@PathVariable("id") Long colaboradorId) {
+		return colaboradorService.buscarColaborador(colaboradorId);
 	}
 	
 	@DeleteMapping("/{id}")
@@ -67,10 +71,10 @@ public class ColaboradorController {
 	}
 	
 	@PutMapping("atualizar/{id}")
-	@Operation(summary = "Atualização de colaborador", description = "Exclusão")
+	@Operation(summary = "Atualização de colaborador", description = "Atualizar ")
 	@SecurityRequirement(name = "Bearer Auth")
 	@PreAuthorize("hasRole('ADM')")
-	public ResponseEntity<Object> atualizarColaborador(@RequestBody ColaboradorReturnRegisterDTO colaboradorDTO, @RequestParam Long colaboradorID) {
+	public ResponseEntity<Object> atualizarColaborador(@RequestBody ColaboradorReturnRegisterDTO colaboradorDTO, @PathVariable("id") Long colaboradorID) {
 		return ResponseEntity.ok(colaboradorService.atualizarColaborador(colaboradorDTO, colaboradorID));
 	}
 	
